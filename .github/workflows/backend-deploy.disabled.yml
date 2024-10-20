@@ -1,0 +1,25 @@
+name: Deploy Vercel Project
+
+on:
+  schedule:
+    - cron: "0 7 * * 1-5"
+
+jobs:
+  deploy-project:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Create Firebase service account file
+        working-directory: ./inventory-management-system-backend
+        env:
+          DB_URL: ${{ secrets.DB_URL }}
+
+      - name: Install Vercel CLI
+        working-directory: ./inventory-management-system-backend
+        run: npm install -g vercel
+
+      - name: Deploy to Vercel
+        working-directory: ./inventory-management-system-backend
+        run: vercel --prod --token=${{ secrets.VERCEL_TOKEN }} -y

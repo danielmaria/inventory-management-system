@@ -1,0 +1,20 @@
+name: Stop Vercel Project
+
+on:
+  schedule:
+    - cron: "0 18 * * 1-5"
+
+jobs:
+  stop-project:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Vercel CLI
+        working-directory: ./inventory-management-system-backend
+        run: npm install -g vercel
+
+      - name: Remove Vercel project
+        working-directory: ./inventory-management-system-backend
+        run: vercel remove inventory-management-system-backend --token=${{ secrets.VERCEL_TOKEN }} -y
